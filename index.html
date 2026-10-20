@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Laboratório de câmbio: consulta de moedas e cotações usando a API Frankfurter.">
+  <title>Atlas Câmbio | Frankfurter API</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark topbar">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#"><span class="brand-mark"><i class="bi bi-globe-americas"></i></span><span>atlas<span class="brand-light">/câmbio</span></span></a>
+      <span class="navbar-text"><span class="live-dot"></span> Laboratório de moedas</span>
+    </div>
+  </nav>
+
+  <header class="intro">
+    <div class="container intro-inner">
+      <div class="intro-copy">
+        <span class="kicker">DADOS ABERTOS · FRANKFURTER</span>
+        <h1>O mundo em<br><em>outras moedas.</em></h1>
+        <p>Consulte cotações, explore o histórico e descubra moedas disponíveis em uma interface de pesquisa cambial.</p>
+        <a href="#explorar" class="btn btn-light btn-lg intro-btn"><i class="bi bi-arrow-down-right me-2"></i>Explorar cotações</a>
+      </div>
+      <div class="world-art" aria-hidden="true">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="globe"><i class="bi bi-globe-americas"></i></div>
+        <span class="currency-tag tag-usd">$ USD</span><span class="currency-tag tag-eur">€ EUR</span><span class="currency-tag tag-gbp">£ GBP</span><span class="currency-tag tag-brl">R$ BRL</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container py-5" id="explorar">
+    <div class="content-heading">
+      <div><span class="kicker dark">CENTRAL DE CONSULTAS</span><h2>Explore o mercado cambial</h2><p>Os dados são buscados em tempo real na API pública, sem necessidade de chave.</p></div>
+      <a class="docs-link" href="https://frankfurter.dev/pt/" target="_blank" rel="noopener">Documentação <i class="bi bi-box-arrow-up-right"></i></a>
+    </div>
+
+    <section class="query-box mb-4">
+      <div class="query-tabs">
+        <button class="query-tab active" type="button" data-mode="latest"><i class="bi bi-lightning-charge"></i> Cotações atuais</button>
+        <button class="query-tab" type="button" data-mode="history"><i class="bi bi-calendar3"></i> Data específica</button>
+        <button class="query-tab" type="button" data-mode="period"><i class="bi bi-graph-up"></i> Histórico por período</button>
+        <button class="query-tab" type="button" data-mode="currencies"><i class="bi bi-translate"></i> Lista de moedas</button>
+      </div>
+      <form id="query-form" class="query-form">
+        <div class="row g-3 align-items-end" id="rate-fields">
+          <div class="col-md-4">
+            <label class="form-label" for="base">Moeda base</label>
+            <select class="form-select form-select-lg" id="base"><option value="EUR">EUR — Euro</option><option value="USD">USD — Dólar americano</option><option value="BRL">BRL — Real brasileiro</option><option value="GBP">GBP — Libra esterlina</option><option value="JPY">JPY — Iene japonês</option><option value="CAD">CAD — Dólar canadense</option><option value="CHF">CHF — Franco suíço</option><option value="AUD">AUD — Dólar australiano</option></select>
+          </div>
+          <div class="col-md-4" id="quotes-wrap">
+            <label class="form-label" for="quotes">Moedas de destino</label>
+            <input class="form-control form-control-lg" id="quotes" value="USD, BRL, GBP, JPY" placeholder="USD, BRL, GBP">
+            <div class="form-text">Separe os códigos por vírgula. Deixe vazio para consultar todas.</div>
+          </div>
+          <div class="col-md-4" id="date-wrap">
+            <label class="form-label" for="specific-date">Data da cotação</label>
+            <input class="form-control form-control-lg" id="specific-date" type="date">
+          </div>
+          <div class="col-md-4 d-none" id="from-wrap">
+            <label class="form-label" for="date-from">Data inicial</label><input class="form-control form-control-lg" id="date-from" type="date">
+          </div>
+          <div class="col-md-4 d-none" id="to-wrap">
+            <label class="form-label" for="date-to">Data final</label><input class="form-control form-control-lg" id="date-to" type="date">
+          </div>
+          <div class="col-md-4 d-none" id="group-wrap">
+            <label class="form-label" for="grouping">Agrupamento</label><select class="form-select form-select-lg" id="grouping"><option value="">Diário</option><option value="week">Semanal</option><option value="month">Mensal</option></select>
+          </div>
+          <div class="col-md-4 d-none" id="currency-search-wrap">
+            <label class="form-label" for="currency-search">Filtrar moedas</label><input class="form-control form-control-lg" id="currency-search" placeholder="Ex.: dollar, real, yen">
+          </div>
+          <div class="col-md-4 d-none" id="currency-scope-wrap">
+            <label class="form-label" for="currency-scope">Escopo</label><select class="form-select form-select-lg" id="currency-scope"><option value="">Moedas atuais</option><option value="all">Incluir moedas históricas</option></select>
+          </div>
+          <div class="col-12 d-flex flex-wrap gap-2 mt-4">
+            <button class="btn btn-dark btn-lg px-4" id="submit-query" type="submit"><i class="bi bi-search me-2"></i>Buscar dados</button>
+            <button class="btn btn-outline-secondary btn-lg" id="reset-query" type="button">Restaurar</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <div id="alert-box" class="alert d-none" role="alert" aria-live="polite"></div>
+    <section id="results" class="d-none">
+      <div class="result-head"><div><span class="kicker dark">RESULTADO DA API</span><h2 id="result-title">Cotações</h2><p id="result-description"></p></div><button id="toggle-json" type="button" class="btn btn-outline-dark"><i class="bi bi-code-slash me-2"></i>JSON</button></div>
+      <div id="summary-cards" class="summary-grid mb-4"></div>
+      <div class="data-panel">
+        <div class="data-panel-head"><div><h3 id="table-title">Registros retornados</h3><p id="table-caption">Os dados abaixo refletem a resposta recebida.</p></div><span class="count-label" id="record-count">0 registros</span></div>
+        <div class="table-responsive"><table class="table align-middle mb-0"><thead id="table-head"></thead><tbody id="table-body"></tbody></table></div>
+        <div class="table-bottom"><span id="table-source">Fonte: Frankfurter API v2</span><button id="copy-json" type="button" class="btn btn-sm btn-outline-dark"><i class="bi bi-clipboard me-1"></i>Copiar JSON</button></div>
+      </div>
+      <div class="data-panel mt-4">
+        <div class="data-panel-head"><div><h3><i class="bi bi-fingerprint me-2"></i>Valores sem repetição</h3><p>Valores de cotação distintos encontrados nos resultados.</p></div><span class="count-label" id="distinct-count">0 valores</span></div>
+        <div class="distinct-values" id="distinct-values"></div>
+      </div>
+      <div id="json-panel" class="data-panel mt-4 d-none"><div class="data-panel-head"><div><h3>Resposta JSON original</h3><p>Conteúdo bruto retornado pelo endpoint.</p></div></div><pre id="json-content" class="json-content"></pre></div>
+    </section>
+
+    <section class="how-it-works">
+      <div class="content-heading"><div><span class="kicker dark">POR TRÁS DA INTERFACE</span><h2>Quatro formas de explorar</h2></div></div>
+      <div class="feature-grid">
+        <article><span class="feature-number">01</span><i class="bi bi-arrow-left-right"></i><h3>Cotações atuais</h3><p>Busca taxas recentes, com opção de escolher a moeda base e filtrar moedas de destino.</p></article>
+        <article><span class="feature-number">02</span><i class="bi bi-calendar-event"></i><h3>Consulta histórica</h3><p>Consulta taxas para uma data específica, quando existem dados publicados.</p></article>
+        <article><span class="feature-number">03</span><i class="bi bi-bar-chart-line"></i><h3>Série temporal</h3><p>Retorna várias observações entre datas, com agrupamento diário, semanal ou mensal.</p></article>
+        <article><span class="feature-number">04</span><i class="bi bi-collection"></i><h3>Catálogo de moedas</h3><p>Lista as moedas suportadas e permite filtrar os registros exibidos sem repetir itens.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-main">
+      <div class="footer-brand"><span class="brand-mark"><i class="bi bi-globe-americas"></i></span><div><strong>atlas/câmbio</strong><p>Projeto acadêmico de integração com API pública.</p></div></div>
+      <div class="footer-student"><span class="footer-label">DESENVOLVIDO POR</span><strong>Eduardo Jean Padilha de Andrade</strong><span>Fundamentos ao Desenvolvimento Web</span><span>Curso: Sistemas de Informação</span><span>Semestre: 2º 2026</span><span>Professor: Rafaeli Pinheiro</span></div>
+    </div>
+    <div class="container footer-bottom"><span>Dados fornecidos pela API Frankfurter.</span><span>Interface demonstrativa para fins educacionais.</span></div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
